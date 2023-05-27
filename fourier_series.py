@@ -3,7 +3,7 @@ from pytictoc import TicToc
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-class c_Interparc:
+class Interparc:
     def __init__(self):
         pass
 
@@ -90,16 +90,16 @@ if __name__ == "__main__":
     t = TicToc()
 
     # ==================== Data import ====================
-    data = np.loadtxt('./paths/flower_path.csv', delimiter=',')
+    data = np.loadtxt('./paths/clover_path.csv', delimiter=',')
     x = data[:, 0]
     y = data[:, 1]
 
     # ==================== Same Euclidian distance interpolation ====================
-    spline = c_Interparc()
+    spline = Interparc()
     path_interp = spline.fnc_interparc(data, 500)
 
     # ==================== Fourier series ====================
-    Fourier = Fourier_series(N=50, data=path_interp)
+    Fourier = Fourier_series(N=100, data=path_interp)
     function = Fourier.get_function()
     t.tic()
     point = Fourier.get_point(0.3)
