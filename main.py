@@ -24,7 +24,7 @@ arc_length = spline.fnc_arclength(path_interp)
 print(arc_length[-1])
 
 # ==================== Fourier series ====================
-Fourier = Fourier_series(N=100, data=path_interp)
+Fourier = Fourier_series(N=10, data=path_interp)
 function = Fourier.get_function()
 
 
@@ -49,9 +49,8 @@ def update(frame):
 
 ani = animation.FuncAnimation(fig, update, frames=100, interval=200, blit=True)
 plt.plot(x, y, label='original')
-plt.plot(function.real, function.imag, label='approximated')
+plt.plot(function.real, function.imag, color='#ff7f0e', linestyle='--', label='approximated')
 plt.grid()
 plt.legend()
 
 plt.show()
-
