@@ -90,7 +90,7 @@ if __name__ == "__main__":
     t = TicToc()
 
     # ==================== Data import ====================
-    data = np.loadtxt('flower_path.csv', delimiter=',')
+    data = np.loadtxt('./paths/flower_path.csv', delimiter=',')
     x = data[:, 0]
     y = data[:, 1]
 
