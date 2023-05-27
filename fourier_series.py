@@ -31,8 +31,8 @@ class Interparc:
         
         return Path_I
     
-    def fnc_interparc_1m(self, Path):        
-        # Original Linear distance stack 
+    def fnc_interparc_1m(self, Path):
+        # Original Linear distance stack
         dist_stack = self.fnc_arclength(Path)
         dist_stack = np.insert(dist_stack, 0, 0)
         
@@ -97,14 +97,13 @@ class Fourier_series:
             _point += coeffs[n + N] * np.exp(-1j * angle)
 
         return _point
-
-
+    
 if __name__ == "__main__":
     # ==================== Tictoc ====================
     t = TicToc()
 
     # ==================== Data import ====================
-    data = np.loadtxt('./paths/path_interp.csv', delimiter=',')
+    data = np.loadtxt('./paths/flower_path.csv', delimiter=',')
     x = data[:, 0]
     y = data[:, 1]
 
@@ -114,8 +113,9 @@ if __name__ == "__main__":
     path_interp = spline.fnc_interparc_1m(data)
 
     # ==================== Fourier series ====================
-    Fourier = Fourier_series(N=100, data=path_interp)
+    Fourier = Fourier_series(N=10, data=path_interp)
     function = Fourier.get_function()
+    coeffs = Fourier.coeffs
     t.tic()
     point = Fourier.get_point(0.3)
     t.toc()
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     scatter = ax.scatter([], [], color='red')
 
     def update(frame):
-        dt = 0.01
+        dt = 0.01 # 100 Hz, 1 second plot
         t = frame * dt  # time index
         point = Fourier.get_point(t)
         scatter.set_offsets([[point.real, point.imag]])
