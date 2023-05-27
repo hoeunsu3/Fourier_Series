@@ -1,7 +1,4 @@
 import numpy as np
-from pytictoc import TicToc
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 
 class Interparc:
     def __init__(self):
@@ -53,7 +50,7 @@ class Fourier_series:
         self.coeffs = self.get_fourier_coeffs()
 
     def get_complex_data(self, data):
-        x = data[:, 0] 
+        x = data[:, 0]
         y = data[:, 1]
         z = x + y * 1j
 
@@ -64,14 +61,16 @@ class Fourier_series:
         z = self.z
         z_len = self.z_len
 
-        _coeffs = np.zeros(2 * N + 1, dtype=complex)
-        for n in range(-N, N + 1):
+        _coeffs = np.zeros(N + 1, dtype=complex)
+        for n in range(N + 1):
             for i in range(z_len):
-                angle = n * 2 * np.pi * i / z_len
-                _coeffs[n + N] += z[i] * np.exp(-1j * angle) / z_len
+                idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
+                angle = idx * 2 * np.pi * i / z_len
+                _coeffs[n] += z[i] * np.exp(-1j * angle) / z_len
 
         return _coeffs
     
+
     def get_function(self):
         N = self.N
         z_len = self.z_len
@@ -79,12 +78,14 @@ class Fourier_series:
         
         _function = np.zeros(z_len, dtype=complex)
         for i in range(z_len):
-            for n in range(-N, N + 1):
-                angle = n * 2 * np.pi * i / z_len
-                _function[i] += coeffs[n + N] * np.exp(-1j * angle)
+            for n in range(N + 1):
+                idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
+                angle = idx * 2 * np.pi * i / z_len
+                _function[i] += coeffs[n] * np.exp(-1j * angle)
 
         return _function
     
+
     def get_point(self, time):
         N = self.N
         z_len = self.z_len
@@ -92,50 +93,27 @@ class Fourier_series:
         _point = 0 + 0j
 
         i = time * self.z_len
-        for n in range(-N, N + 1):
-            angle = n * 2 * np.pi * i / z_len
-            _point += coeffs[n + N] * np.exp(-1j * angle)
+        for n in range(N + 1):
+            idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
+            angle = idx * 2 * np.pi * i / z_len
+            _point += coeffs[n] * np.exp(-1j * angle)
 
         return _point
-    
-if __name__ == "__main__":
-    # ==================== Tictoc ====================
-    t = TicToc()
 
-    # ==================== Data import ====================
-    data = np.loadtxt('./paths/flower_path.csv', delimiter=',')
-    x = data[:, 0]
-    y = data[:, 1]
+    def get_lines(self, time):
+        N = self.N
+        z_len = self.z_len
+        coeffs = self.coeffs
+        
+        _lines = np.zeros(N + 1, dtype=complex)
 
-    # ==================== Same Euclidian distance interpolation ====================
-    spline = Interparc()
-    # path_interp = spline.fnc_interparc(data, 500)
-    path_interp = spline.fnc_interparc_1m(data)
+        i = time * self.z_len
+        for n in range(N + 1):
+            idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
+            angle = idx * 2 * np.pi * i / z_len
+            if n != 0:
+                _lines[n] = _lines[n - 1] + coeffs[n] * np.exp(-1j * angle)
+            else:
+                _lines[n] = coeffs[n] * np.exp(-1j * angle)
 
-    # ==================== Fourier series ====================
-    Fourier = Fourier_series(N=10, data=path_interp)
-    function = Fourier.get_function()
-    coeffs = Fourier.coeffs
-    t.tic()
-    point = Fourier.get_point(0.3)
-    t.toc()
-
-    # ==================== Plot ====================
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    scatter = ax.scatter([], [], color='red')
-
-    def update(frame):
-        dt = 0.01 # 100 Hz, 1 second plot
-        t = frame * dt  # time index
-        point = Fourier.get_point(t)
-        scatter.set_offsets([[point.real, point.imag]])
-        return scatter,
-
-    ani = animation.FuncAnimation(fig, update, frames=100, interval=100, blit=True)
-    plt.plot(x, y, label='original')
-    plt.plot(function.real, function.imag, label='approximated')
-    plt.legend()
-
-    plt.show()
-    
+        return _lines
