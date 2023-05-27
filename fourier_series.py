@@ -111,12 +111,12 @@ if __name__ == "__main__":
     scatter = ax.scatter([], [], color='red')
 
     def update(frame):
-        t = frame / 100  # 0부터 1까지의 시간 값
+        dt = 0.01
+        t = frame * dt  # time index
         point = Fourier.get_point(t)
         scatter.set_offsets([[point.real, point.imag]])
         return scatter,
 
-    # 애니메이션 생성
     ani = animation.FuncAnimation(fig, update, frames=100, interval=100, blit=True)
     plt.plot(x, y, label='original')
     plt.plot(function.real, function.imag, label='approximated')
