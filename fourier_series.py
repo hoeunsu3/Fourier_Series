@@ -1,6 +1,7 @@
 import numpy as np
 from pytictoc import TicToc
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 class c_Interparc:
     def __init__(self):
@@ -76,7 +77,7 @@ class Fourier_series:
         coeffs = self.coeffs
         _point = 0 + 0j
 
-        i = time / self.z_len
+        i = time * self.z_len
         for n in range(-N, N + 1):
             angle = n * 2 * np.pi * i / z_len
             _point += coeffs[n + N] * np.exp(-1j * angle)
@@ -86,10 +87,10 @@ class Fourier_series:
 
 if __name__ == "__main__":
     # ==================== Tictoc ====================
-    # t = TicToc()
+    t = TicToc()
 
     # ==================== Data import ====================
-    data = np.loadtxt('pi.csv', delimiter=',')
+    data = np.loadtxt('flower_path.csv', delimiter=',')
     x = data[:, 0]
     y = data[:, 1]
 
@@ -100,12 +101,26 @@ if __name__ == "__main__":
     # ==================== Fourier series ====================
     Fourier = Fourier_series(N=50, data=path_interp)
     function = Fourier.get_function()
-    point = Fourier.get_point(0.5)
+    t.tic()
+    point = Fourier.get_point(0.3)
+    t.toc()
 
     # ==================== Plot ====================
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter([], [], color='red')
+
+    def update(frame):
+        t = frame / 100  # 0부터 1까지의 시간 값
+        point = Fourier.get_point(t)
+        scatter.set_offsets([[point.real, point.imag]])
+        return scatter,
+
+    # 애니메이션 생성
+    ani = animation.FuncAnimation(fig, update, frames=100, interval=100, blit=True)
     plt.plot(x, y, label='original')
     plt.plot(function.real, function.imag, label='approximated')
-    plt.scatter(point.real, point.imag, label='0.5 sec')
     plt.legend()
+
     plt.show()
     
