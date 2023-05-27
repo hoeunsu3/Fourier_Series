@@ -30,6 +30,21 @@ class Interparc:
         Path_I = np.vstack([xn, yn]).T
         
         return Path_I
+    
+    def fnc_interparc_1m(self, Path):        
+        # Original Linear distance stack 
+        dist_stack = self.fnc_arclength(Path)
+        dist_stack = np.insert(dist_stack, 0, 0)
+        print(dist_stack)
+        
+        # Interpolation into N array and same distance
+        N_arr = np.linspace(0, dist_stack[-1], int(dist_stack[-1]))
+        xn = np.interp(N_arr, dist_stack, Path[:,0])
+        yn = np.interp(N_arr, dist_stack, Path[:,1])
+
+        Path_I = np.vstack([xn, yn]).T
+        
+        return Path_I
 
 class Fourier_series:
     def __init__(self, N=1, data=None):
@@ -90,13 +105,14 @@ if __name__ == "__main__":
     t = TicToc()
 
     # ==================== Data import ====================
-    data = np.loadtxt('./paths/clover_path.csv', delimiter=',')
+    data = np.loadtxt('./paths/path_interp.csv', delimiter=',')
     x = data[:, 0]
     y = data[:, 1]
 
     # ==================== Same Euclidian distance interpolation ====================
     spline = Interparc()
-    path_interp = spline.fnc_interparc(data, 500)
+    # path_interp = spline.fnc_interparc(data, 500)
+    path_interp = spline.fnc_interparc_1m(data)
 
     # ==================== Fourier series ====================
     Fourier = Fourier_series(N=100, data=path_interp)
