@@ -35,7 +35,6 @@ class Interparc:
         # Original Linear distance stack 
         dist_stack = self.fnc_arclength(Path)
         dist_stack = np.insert(dist_stack, 0, 0)
-        print(dist_stack)
         
         # Interpolation into N array and same distance
         N_arr = np.linspace(0, dist_stack[-1], int(dist_stack[-1]))
