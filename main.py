@@ -21,17 +21,25 @@ spline = Interparc()
 path_interp = spline.fnc_interparc_1m(data)
 # arc length
 arc_length = spline.fnc_arclength(path_interp)
-print(arc_length[-1])
+print(arc_length[-1] + ' [m]')
 
 # ==================== Fourier series ====================
-Fourier = Fourier_series(N=100, data=path_interp)
+N = 100
+Fourier = Fourier_series(N, data=path_interp)
 function = Fourier.get_function()
 
 # ==================== Plot ====================
+plot_fourier = 'circle' # line, circle
+
 fig = plt.figure()
 ax = fig.add_subplot(111)
 scatter = ax.scatter([], [], color='r')
-line, = ax.plot([], [], color='g', label='fourier lines')
+if plot_fourier == 'line':
+    line, = ax.plot([], [], color='g', label='fourier lines')
+else:
+    circles = [plt.Circle((np.nan, np.nan), radius=np.nan, linewidth=1, fill=False, color='g', alpha=0.5) for _ in range(N)]
+    for circle in circles:
+        ax.add_patch(circle)
 
 def update(frame):
     dt = 0.01 # 100 Hz, 1 second plot
@@ -41,12 +49,19 @@ def update(frame):
     scatter.set_offsets([[_point.real, _point.imag]])
 
     _lines = Fourier.get_lines(t)
-    line.set_data([_lines.real, _lines.imag])
+    if plot_fourier == 'line':
+        line.set_data([_lines.real, _lines.imag])
+    
+        return scatter, line
+    else:
+        for i, circle in enumerate(circles):
+            circle.set_center([_lines[i].real, _lines[i].imag])
+            circle.set_radius(np.linalg.norm(_lines[(i + 1) % len(_lines)] - _lines[i]))
 
-    return scatter, line
+        return scatter, *circles
 
 
-ani = animation.FuncAnimation(fig, update, frames=100, interval=200, blit=True)
+ani = animation.FuncAnimation(fig, update, frames=100, interval=100, blit=True)
 plt.plot(x, y, label='original')
 plt.plot(function.real, function.imag, color='#ff7f0e', linestyle='--', label='approximated')
 plt.grid()
