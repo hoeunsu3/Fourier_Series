@@ -81,7 +81,7 @@ class Fourier_series:
             for n in range(N + 1):
                 idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
                 angle = idx * 2 * np.pi * i / z_len
-                _function[i] += coeffs[n] * np.exp(-1j * angle)
+                _function[i] += coeffs[n] * np.exp(1j * angle)
 
         return _function
     
@@ -96,7 +96,7 @@ class Fourier_series:
         for n in range(N + 1):
             idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
             angle = idx * 2 * np.pi * i / z_len
-            _point += coeffs[n] * np.exp(-1j * angle)
+            _point += coeffs[n] * np.exp(1j * angle)
 
         return _point
 
@@ -112,8 +112,8 @@ class Fourier_series:
             idx = n // 2 if n % 2 == 0 else -(n // 2 + 1)
             angle = idx * 2 * np.pi * i / z_len
             if n != 0:
-                _lines[n] = _lines[n - 1] + coeffs[n] * np.exp(-1j * angle)
+                _lines[n] = _lines[n - 1] + coeffs[n] * np.exp(1j * angle)
             else:
-                _lines[n] = coeffs[n] * np.exp(-1j * angle)
+                _lines[n] = coeffs[n] * np.exp(1j * angle)
 
         return _lines

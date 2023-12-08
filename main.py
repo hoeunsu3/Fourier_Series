@@ -24,9 +24,8 @@ arc_length = spline.fnc_arclength(path_interp)
 print(arc_length[-1])
 
 # ==================== Fourier series ====================
-Fourier = Fourier_series(N=10, data=path_interp)
+Fourier = Fourier_series(N=100, data=path_interp)
 function = Fourier.get_function()
-
 
 # ==================== Plot ====================
 fig = plt.figure()
