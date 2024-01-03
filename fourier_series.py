@@ -4,43 +4,23 @@ class Interparc:
     def __init__(self):
         pass
 
-    def fnc_arclength(self, Path):
-        Xd = np.diff(Path[:,0])
-        Yd = np.diff(Path[:,1])
-        dist = np.sqrt(Xd**2 + Yd**2)
-        
-        # accumulate segment distance
-        dist_stack = np.cumsum(dist)
-        
-        return dist_stack
+    def fnc_arclength(self, path):
+        return np.cumsum(np.sqrt(np.diff(path[:, 0])**2 + np.diff(path[:, 1])**2))
 
-    def fnc_interparc(self, Path, N):        
-        # Original Linear distance stack 
-        dist_stack = self.fnc_arclength(Path)
-        dist_stack = np.insert(dist_stack, 0, 0)
+    def fnc_interparc(self, path, point_num):
+        dist_stack = np.insert(self.fnc_arclength(path), 0, 0)
         
-        # Interpolation into N array and same distance
-        N_arr = np.linspace(0, dist_stack[-1], N)
-        xn = np.interp(N_arr, dist_stack, Path[:,0])
-        yn = np.interp(N_arr, dist_stack, Path[:,1])
+        if dist_stack[-1] < 100: 
+            arr_num = np.linspace(0, dist_stack[-1], point_num) # Interpolate by number
+        else: 
+            arr_num = np.linspace(0, dist_stack[-1], int(dist_stack[-1])) # Interpolate by arc-length
 
-        Path_I = np.vstack([xn, yn]).T
+        path_interpolated = np.column_stack([
+            np.interp(arr_num, dist_stack, path[:, 0]),
+            np.interp(arr_num, dist_stack, path[:, 1])
+        ])
         
-        return Path_I
-    
-    def fnc_interparc_1m(self, Path):
-        # Original Linear distance stack
-        dist_stack = self.fnc_arclength(Path)
-        dist_stack = np.insert(dist_stack, 0, 0)
-        
-        # Interpolation into N array and same distance
-        N_arr = np.linspace(0, dist_stack[-1], int(dist_stack[-1]))
-        xn = np.interp(N_arr, dist_stack, Path[:,0])
-        yn = np.interp(N_arr, dist_stack, Path[:,1])
-
-        Path_I = np.vstack([xn, yn]).T
-        
-        return Path_I
+        return path_interpolated
 
 class Fourier_series:
     def __init__(self, N=1, data=None):
