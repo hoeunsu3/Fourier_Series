@@ -19,7 +19,7 @@ y = data[:, 1]
 spline = Interparc()
 path_interp = spline.fnc_interparc(data, 500)
 arc_length = spline.fnc_arclength(path_interp)
-print(arc_length[-1] + ' [m]')
+print(arc_length[-1], '[m]')
 
 # ==================== Fourier series ====================
 N = 100
