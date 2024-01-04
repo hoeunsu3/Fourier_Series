@@ -10,14 +10,14 @@ from fourier_series import Interparc, Fourier_series
 t = TicToc()
 
 # ==================== Data import ====================
-data = np.loadtxt('./paths/interpolated_path.csv', delimiter=',')
+data = np.loadtxt('./paths/monaco_path.csv', delimiter=',')
 x = data[:, 0]
 y = data[:, 1]
 
 
 # ==================== Same Euclidian distance interpolation ====================
 spline = Interparc()
-path_interp = spline.fnc_interparc(data, ds=0.1)
+path_interp = spline.fnc_interparc(data, ds=1)
 arc_length = spline.fnc_arclength(path_interp)
 print(arc_length[-1], '[m]')
 
