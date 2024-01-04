@@ -5,20 +5,17 @@ class Interparc:
         pass
 
     def fnc_arclength(self, path):
-        return np.cumsum(np.sqrt(np.diff(path[:, 0])**2 + np.diff(path[:, 1])**2))
+        s = [0.0]
+        s.extend(np.cumsum(np.sqrt(np.diff(path[:, 0])**2 + np.diff(path[:, 1])**2)))
+        return s
 
-    def fnc_interparc(self, path, point_num):
-        dist_stack = np.insert(self.fnc_arclength(path), 0, 0)
+    def fnc_interparc(self, path, ds):
+        '''Interpolate the path by same arc-length'''
+        s = self.fnc_arclength(path)
+        s_ds = np.arange(0, s[-1], ds)
         
-        if dist_stack[-1] < 100: 
-            arr_num = np.linspace(0, dist_stack[-1], point_num) # Interpolate by number
-        else: 
-            arr_num = np.linspace(0, dist_stack[-1], int(dist_stack[-1])) # Interpolate by arc-length
-
-        path_interpolated = np.column_stack([
-            np.interp(arr_num, dist_stack, path[:, 0]),
-            np.interp(arr_num, dist_stack, path[:, 1])
-        ])
+        path_interpolated = np.column_stack([np.interp(s_ds, s, path[:, 0]),
+                                            np.interp(s_ds, s, path[:, 1])])
         
         return path_interpolated
 

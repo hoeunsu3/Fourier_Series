@@ -17,7 +17,7 @@ y = data[:, 1]
 
 # ==================== Same Euclidian distance interpolation ====================
 spline = Interparc()
-path_interp = spline.fnc_interparc(data, 500)
+path_interp = spline.fnc_interparc(data, ds=0.1)
 arc_length = spline.fnc_arclength(path_interp)
 print(arc_length[-1], '[m]')
 
