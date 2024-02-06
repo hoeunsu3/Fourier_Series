@@ -10,7 +10,7 @@ from fourier_series import Interparc, Fourier_series
 t = TicToc()
 
 # ==================== Data import ====================
-data = np.loadtxt('./paths/gear_path.csv', delimiter=',')
+data = np.loadtxt('./paths/lemniscate_path.csv', delimiter=',')
 x = data[:, 0]
 y = data[:, 1]
 
@@ -22,7 +22,7 @@ arc_length = spline.fnc_arclength(path_interp)
 print(arc_length[-1], '[m]')
 
 # ==================== Fourier series ====================
-N = 5
+N = 20
 Fourier = Fourier_series(N, data=path_interp)
 function = Fourier.get_function()
 
