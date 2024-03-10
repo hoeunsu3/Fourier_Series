@@ -10,11 +10,11 @@ from fourier_series import Interparc, Fourier_series
 t = TicToc()
 
 # ==================== Data import ====================
-data = np.loadtxt('./paths/yongin_path_corner.csv', delimiter=',')
+data = np.loadtxt('./paths/monaco_path.csv', delimiter=',')
 x = data[:, 0]
 y = data[:, 1]
 
-
+plt.rc('axes', labelsize=15)
 # ==================== Same Euclidian distance interpolation ====================
 spline = Interparc()
 path_interp = spline.fnc_interparc(data, ds=1)
@@ -35,7 +35,7 @@ function2 = Fourier2.get_function()
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
-plt.plot(x, y, color='tab:blue', linewidth=2, linestyle='-',  label='reference path')
+plt.plot(x, y, color='tab:blue', linewidth=2, linestyle='-',  label='Monaco')
 plt.plot(function.real, function.imag, color='tab:red', linewidth=2, linestyle='--', label=r'$N_f=70$')
 plt.plot(function2.real, function2.imag, color='tab:green', linewidth=2, linestyle='-.', label=r'$N_f=5$')
 plt.grid()
