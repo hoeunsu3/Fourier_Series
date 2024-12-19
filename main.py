@@ -1,13 +1,8 @@
 import numpy as np
-from pytictoc import TicToc
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from fourier_series import Interparc, Fourier_series
-
-
-# ==================== Tictoc ====================
-t = TicToc()
 
 # ==================== Data import ====================
 data = np.loadtxt('./paths/yongin_path.csv', delimiter=',')
