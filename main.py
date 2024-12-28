@@ -5,7 +5,7 @@ import matplotlib.animation as animation
 from fourier_series import Interparc, Fourier_series
 
 # ==================== Data import ====================
-data = np.loadtxt('./paths/yongin_path.csv', delimiter=',')
+data = np.loadtxt('./paths/monaco_path.csv', delimiter=',')
 x = data[:, 0]
 y = data[:, 1]
 
