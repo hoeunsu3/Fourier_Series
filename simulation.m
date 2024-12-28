@@ -1,5 +1,5 @@
-% simulation.m
-% Fourier series path animation in MATLAB
+% simulation_with_circle.m
+% Fourier series path animation with a dynamic circle centered at the origin
 
 %% Clear Workspace and Command Window
 clear;
@@ -37,6 +37,11 @@ title('Fourier Series Animation');
 plot(x, y, 'k-', 'DisplayName', 'Original Path'); % Original path
 plot(real(ReconstructedPath), imag(ReconstructedPath), '--', 'DisplayName', 'Approximated Path'); % Approximated path
 scatterPoint = scatter(real(ComplexPath(1)), imag(ComplexPath(1)), 50, 'r', 'filled', 'DisplayName', 'Fourier Point'); % Fourier point
+
+% Add a dynamic circle
+theta = linspace(0, 2 * pi, 100); % Angles for the circle
+CircleHandle = plot(nan, nan, 'b-', 'DisplayName', 'Dynamic Circle'); % Circle plot
+
 legend;
 
 %% Animation Parameters
@@ -46,8 +51,6 @@ num_frames = fps * duration;
 time_values = linspace(0, 1, num_frames); % Normalized time values
 
 %% Fourier Point Animation
-AnimationType = 'line'; % line or circle
-
 for t = time_values
     % Compute the Fourier point at the current time
     FourierPoint = getFourierPoint(t, N, NumPathPoints, FourierCoeffs);
@@ -56,6 +59,15 @@ for t = time_values
     scatterPoint.XData = real(FourierPoint);
     scatterPoint.YData = imag(FourierPoint);
 
+    % Compute the radius of the circle (distance from origin)
+    Radius = abs(FourierPoint);
+
+    % Update the dynamic circle
+    CircleX = Radius * cos(theta); % X-coordinates of the circle
+    CircleY = Radius * sin(theta); % Y-coordinates of the circle
+    CircleHandle.XData = CircleX;
+    CircleHandle.YData = CircleY;
+
     % Control animation speed
     pause(1 / fps);
-end 
+end
