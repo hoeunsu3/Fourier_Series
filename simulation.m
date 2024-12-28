@@ -7,7 +7,7 @@ close all;
 clc;
 
 %% Data Import
-PathData = csvread('./paths/yongin_path.csv'); % Replace with your file path
+PathData = csvread('./paths/yongin_path_corner.csv'); % Replace with your file path
 x = PathData(:, 1); % X-coordinates
 y = PathData(:, 2); % Y-coordinates
 
@@ -23,8 +23,8 @@ NumPathPoints = length(ArcLengths); % Total number of path points
 FourierCoeffs = getFourierCoeffs(N, ComplexPath, NumPathPoints);
 ReconstructedPath = getFourierPath(N, length(ComplexPath), FourierCoeffs);
 
-disp(['Arc Length: ', num2str(ArcLengths(end)), ' [m]', ...
-      ' Number of path points: ', num2str(NumPathPoints)]);
+disp(['Arc Length: ', num2str(ArcLengths(end)), ' [m]']);
+disp(['Number of path points: ', num2str(NumPathPoints)]);
 
 %% Plot Setup
 figure;
@@ -46,6 +46,8 @@ num_frames = fps * duration;
 time_values = linspace(0, 1, num_frames); % Normalized time values
 
 %% Fourier Point Animation
+AnimationType = 'line'; % line or circle
+
 for t = time_values
     % Compute the Fourier point at the current time
     FourierPoint = getFourierPoint(t, N, NumPathPoints, FourierCoeffs);
