@@ -1,19 +1,19 @@
-function reconstructed_path = getFourierPath(N, MaxLength, coeffs)
+function reconstructed_path = getFourierPath(N, NumPathPoints, coeffs)
     % Reconstruct the path using Fourier series.
     %
     % Inputs:
-    %   N           - Number of Fourier coefficients used.
-    %   MaxLength   - Length of the path (number of points).
-    %   coeffs      - Fourier coefficients (complex vector of size (N+1)x1).
+    %   N              - Number of Fourier coefficients used.
+    %   NumPathPoints  - Number of points in the path.
+    %   coeffs         - Fourier coefficients (complex vector of size (N+1)x1).
     %
     % Outputs:
-    %   reconstructed_path - Reconstructed path as a complex vector (MaxLength x 1).
+    %   reconstructed_path - Reconstructed path as a complex vector (NumPathPoints x 1).
 
     % Initialize the reconstructed path
-    reconstructed_path = zeros(MaxLength, 1); % Complex path
+    reconstructed_path = zeros(NumPathPoints, 1); % Complex path
 
     % Reconstruct the path using Fourier series
-    for i = 1:MaxLength
+    for i = 1:NumPathPoints
         for n = 0:N
             % Determine index for positive or negative frequency
             if mod(n, 2) == 0
@@ -23,7 +23,7 @@ function reconstructed_path = getFourierPath(N, MaxLength, coeffs)
             end
 
             % Compute angle for the Fourier component
-            angle = idx * 2 * pi * (i - 1) / MaxLength;
+            angle = idx * 2 * pi * (i - 1) / NumPathPoints;
 
             % Accumulate the Fourier component
             reconstructed_path(i) = reconstructed_path(i) + coeffs(n + 1) * exp(1i * angle);

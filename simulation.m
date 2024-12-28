@@ -1,24 +1,30 @@
 % simulation.m
 % Fourier series path animation in MATLAB
 
+%% Clear Workspace and Command Window
+clear;
+close all;
+clc;
+
 %% Data Import
 PathData = csvread('./paths/yongin_path.csv'); % Replace with your file path
 x = PathData(:, 1); % X-coordinates
 y = PathData(:, 2); % Y-coordinates
 
 %% Path Interpolation
-ds = 5; % Desired arc-length interval
+ds = 1; % Desired arc-length interval
 InterpolatedPath = getInterpolatedPath(PathData, ds);
 ArcLengths = getArcLength(InterpolatedPath);
 
 %% Fourier Series Computation
 N = 100; % Number of Fourier coefficients
 ComplexPath = getComplexPath(InterpolatedPath);
-MaxLength = floor(ArcLengths(end)); % Total arc length as integer
-FourierCoeffs = getFourierCoeffs(N, ComplexPath, MaxLength);
+NumPathPoints = length(ArcLengths); % Total number of path points
+FourierCoeffs = getFourierCoeffs(N, ComplexPath, NumPathPoints);
 ReconstructedPath = getFourierPath(N, length(ComplexPath), FourierCoeffs);
 
-disp(['Arc Length: ', num2str(MaxLength), ' [m]']);
+disp(['Arc Length: ', num2str(ArcLengths(end)), ' [m]', ...
+      ' Number of path points: ', num2str(NumPathPoints)]);
 
 %% Plot Setup
 figure;
@@ -42,7 +48,7 @@ time_values = linspace(0, 1, num_frames); % Normalized time values
 %% Fourier Point Animation
 for t = time_values
     % Compute the Fourier point at the current time
-    FourierPoint = getFourierPoint(t, N, MaxLength, FourierCoeffs);
+    FourierPoint = getFourierPoint(t, N, NumPathPoints, FourierCoeffs);
 
     % Update the animated scatter point
     scatterPoint.XData = real(FourierPoint);
@@ -50,4 +56,4 @@ for t = time_values
 
     % Control animation speed
     pause(1 / fps);
-end
+end 

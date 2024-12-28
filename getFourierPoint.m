@@ -1,20 +1,20 @@
-function point = getFourierPoint(time, N, MaxLength, coeffs)
+function point = getFourierPoint(time, N, NumPathPoints, coeffs)
     % Compute a single point on the Fourier path at a given time.
     %
     % Inputs:
-    %   time       - Time value (0 to 1, normalized time).
-    %   N          - Number of Fourier coefficients used.
-    %   MaxLength  - Length of the path (number of points).
-    %   coeffs     - Fourier coefficients (complex vector of size (N+1)x1).
+    %   time           - Time value (0 to 1, normalized time).
+    %   N              - Number of Fourier coefficients used.
+    %   NumPathPoints  - Number of points in the path.
+    %   coeffs         - Fourier coefficients (complex vector of size (N+1)x1).
     %
     % Outputs:
-    %   point      - Complex point on the Fourier path at the given time.
+    %   point          - Complex point on the Fourier path at the given time.
 
     % Initialize the point
     point = 0 + 0i;
 
     % Compute index based on time
-    i = time * MaxLength;
+    i = time * NumPathPoints;
 
     % Compute the Fourier point
     for n = 0:N
@@ -26,7 +26,7 @@ function point = getFourierPoint(time, N, MaxLength, coeffs)
         end
 
         % Compute angle for the Fourier component
-        angle = idx * 2 * pi * i / MaxLength;
+        angle = idx * 2 * pi * i / NumPathPoints;
 
         % Accumulate the Fourier component
         point = point + coeffs(n + 1) * exp(1i * angle);
