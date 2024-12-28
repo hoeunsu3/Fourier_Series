@@ -60,5 +60,5 @@ plt.plot(function.real, function.imag, color='#ff7f0e', linestyle='--', label='a
 plt.grid()
 plt.legend()
 
-ani.save('./animation.gif', writer='Pillow')
+# ani.save('./animation.gif', writer='Pillow')
 plt.show()
