@@ -5,7 +5,7 @@
 clear;
 close all;
 clc;
-
+tic;
 %% Data Import
 PathData = csvread('./paths/yongin.csv'); % Replace with your file path
 x = PathData(:, 1); % X-coordinates
@@ -19,13 +19,13 @@ ArcLengths = getArcLength(InterpolatedPath);
 %% Fourier Series Computation
 N = 100; % Number of Fourier coefficients
 ComplexPath = getComplexPath(InterpolatedPath);
-NumPathPoints = length(ArcLengths); % Total number of path points
+NumPathPoints = round(ArcLengths(end)); % Total number of path points
 FourierCoeffs = getFourierCoeffs(N, ComplexPath, NumPathPoints);
 ReconstructedPath = getFourierPath(N, length(ComplexPath), FourierCoeffs);
 
 disp(['Arc Length: ', num2str(ArcLengths(end)), ' [m]']);
 disp(['Number of path points: ', num2str(NumPathPoints)]);
-
+toc;
 %% Animation Type
 AnimationType = 'Lines'; % Default to 'Circles', can change to 'Lines'
 
