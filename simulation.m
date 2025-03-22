@@ -21,7 +21,7 @@ N = 100; % Number of Fourier coefficients
 ComplexPath = getComplexPath(InterpolatedPath);
 NumPathPoints = round(ArcLengths(end)); % Total number of path points
 FourierCoeffs = getFourierCoeffs(N, ComplexPath);
-ReconstructedPath = getFourierPath(N, length(ComplexPath), FourierCoeffs);
+ReconstructedPath = getFourierPath(length(ComplexPath), FourierCoeffs);
 
 disp(['Arc Length: ', num2str(ArcLengths(end)), ' [m]']);
 disp(['Number of path points: ', num2str(NumPathPoints)]);
