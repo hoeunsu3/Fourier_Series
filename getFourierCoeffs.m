@@ -1,33 +1,23 @@
-function coeffs = getFourierCoeffs(N, ComplexPath, NumPathPoints)
-    % Compute Fourier coefficients for a complex path.
+function coeffs = getFourierCoeffs(N, ComplexPath)
+    % Compute Fourier coefficients for a complex path (vectorized version).
     %
     % Inputs:
-    %   N              - Number of Fourier coefficients to compute.
-    %   ComplexPath    - Complex representation of the path (Nx1 vector).
-    %   NumPathPoints  - Number of points in the path (scalar).
+    %   N           - Number of Fourier coefficients to compute.
+    %   ComplexPath - Complex-valued path (vector of length M).
     %
     % Outputs:
-    %   coeffs         - Fourier coefficients (complex vector of size (N+1)x1).
+    %   coeffs      - (N+1)x1 complex vector of Fourier coefficients.
 
-    % Initialize coefficients
-    coeffs = zeros(N + 1, 1); % Complex coefficients
+    M = length(ComplexPath);     % Number of path samples
+    t = (0:M-1) / M;             % Normalized time vector (row)
 
-    % Compute Fourier coefficients
-    for n = 0:N
-        % Determine index for positive or negative frequency
-        if mod(n, 2) == 0
-            idx = n / 2;
-        else
-            idx = -(floor(n / 2) + 1);
-        end
+    % Generate frequency indices: 0, -1, 1, -2, 2, ...
+    n = 0:N;
+    k = (-1).^n .* ceil(n/2);    % Frequency indices (row)
 
-        % Sum contributions from each point in the ComplexPath
-        for i = 1:NumPathPoints
-            angle = idx * 2 * pi * (i - 1) / NumPathPoints; % Angle for the Fourier transform
-            coeffs(n + 1) = coeffs(n + 1) + ComplexPath(i) * exp(-1i * angle);
-        end
+    % Build the complex exponential matrix: each row is exp(-1i * k * t)
+    E = exp(-1i * 2 * pi * (k(:) * t));  % Size (N+1) x M
 
-        % Normalize by path length
-        coeffs(n + 1) = coeffs(n + 1) / NumPathPoints;
-    end
+    % Compute coefficients as row-wise dot product
+    coeffs = (E * ComplexPath(:)) / M;  % (N+1)x1 complex vector
 end

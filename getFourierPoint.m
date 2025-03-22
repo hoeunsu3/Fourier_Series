@@ -1,34 +1,21 @@
-function point = getFourierPoint(time, N, NumPathPoints, coeffs)
+function point = getFourierPoint(time, coeffs)
     % Compute a single point on the Fourier path at a given time.
-    %
-    % Inputs:
-    %   time           - Time value (0 to 1, normalized time).
-    %   N              - Number of Fourier coefficients used.
-    %   NumPathPoints  - Number of points in the path.
-    %   coeffs         - Fourier coefficients (complex vector of size (N+1)x1).
-    %
-    % Outputs:
-    %   point          - Complex point on the Fourier path at the given time.
+    % Input:  time (scalar) - Normalized time value (0 to 1)
+    %         N (scalar) - Number of Fourier coefficients used
+    %         NumPathPoints (scalar) - Number of points in the path
+    %         coeffs ((N+1)x1 vector) - Fourier coefficients
+    % Output: point (complex scalar) - Point on the Fourier path at the given time
 
-    % Initialize the point
-    point = 0 + 0i;
+    Nf = length(coeffs);
 
-    % Compute index based on time
-    i = time * NumPathPoints;
+    % Compute frequency indices
+    idx = zeros(Nf, 1);
+    idx(1:2:end) = floor((0:2:(Nf-1))/2);       % Even indices (positive)
+    idx(2:2:end) = -floor((1:2:(Nf-1))/2) - 1;  % Odd indices (negative)
 
-    % Compute the Fourier point
-    for n = 0:N
-        % Determine index for positive or negative frequency
-        if mod(n, 2) == 0
-            idx = n / 2;
-        else
-            idx = -(floor(n / 2) + 1);
-        end
+    % Compute the angle for all Fourier components
+    angle = 2 * pi * idx * time; % (Nf)
 
-        % Compute angle for the Fourier component
-        angle = idx * 2 * pi * i / NumPathPoints;
-
-        % Accumulate the Fourier component
-        point = point + coeffs(n + 1) * exp(1i * angle);
-    end
+    % Compute the Fourier point using vectorized operations
+    point = sum(coeffs .* exp(1i * angle)); % Complex scalar
 end

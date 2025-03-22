@@ -1,36 +1,21 @@
-function Lines = getFourierLines(time, N, FourierCoeffs, NumPathPoints)
-    % Compute the positions of Fourier components at a given time
-    %
-    % Inputs:
-    %   time           - Normalized time value (0 to 1)
-    %   N              - Number of Fourier coefficients
-    %   FourierCoeffs  - Fourier coefficients (complex vector of size N+1)
-    %   NumPathPoints  - Total number of path points (scalar)
-    %
-    % Output:
-    %   Lines - Complex vector of Fourier component positions (N+1 x 1)
+function Lines = getFourierLines(time, FourierCoeffs)
+    % Compute the positions of Fourier components at a given time.
+    % Input:  time (scalar) - Normalized time value (0 to 1)
+    %         N (scalar) - Number of Fourier coefficients
+    %         FourierCoeffs ((N+1)x1 vector) - Fourier coefficients
+    %         NumPathPoints (scalar) - Total number of path points
+    % Output: Lines ((N+1)x1 vector) - Fourier component positions
+    
+    Nf = length(FourierCoeffs);
 
-    Lines = zeros(N + 1, 1); % Initialize positions
-    CurrentCenter = 0 + 0i; % Start at origin
+    % Compute frequency indices
+    idx = zeros(Nf, 1);
+    idx(1:2:end) = floor((0:2:(Nf-1))/2);       % Even indices (positive)
+    idx(2:2:end) = -floor((1:2:(Nf-1))/2) - 1;  % Odd indices (negative)
 
-    % Compute index for Fourier components
-    i = time * NumPathPoints;
+    % Compute angles at the given time
+    angle = 2 * pi * idx * time; % (N+1)x1
 
-    for n = 0:N
-        % Determine index for positive or negative frequency
-        if mod(n, 2) == 0
-            idx = n / 2; % Positive frequency
-        else
-            idx = -(floor(n / 2) + 1); % Negative frequency
-        end
-
-        % Compute angle for the current Fourier component
-        angle = idx * 2 * pi * i / NumPathPoints;
-
-        % Update the current center with the Fourier component
-        CurrentCenter = CurrentCenter + FourierCoeffs(n + 1) * exp(1i * angle);
-
-        % Store the updated center
-        Lines(n + 1) = CurrentCenter;
-    end
+    % Compute cumulative Fourier component positions
+    Lines = cumsum(FourierCoeffs .* exp(1i * angle)); % (N+1)x1
 end

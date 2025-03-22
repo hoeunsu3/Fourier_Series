@@ -20,7 +20,7 @@ ArcLengths = getArcLength(InterpolatedPath);
 N = 100; % Number of Fourier coefficients
 ComplexPath = getComplexPath(InterpolatedPath);
 NumPathPoints = round(ArcLengths(end)); % Total number of path points
-FourierCoeffs = getFourierCoeffs(N, ComplexPath, NumPathPoints);
+FourierCoeffs = getFourierCoeffs(N, ComplexPath);
 ReconstructedPath = getFourierPath(N, length(ComplexPath), FourierCoeffs);
 
 disp(['Arc Length: ', num2str(ArcLengths(end)), ' [m]']);
@@ -73,7 +73,7 @@ time_values = linspace(0, 1, num_frames); % Normalized time values
 %% Fourier Point Animation
 for t = time_values
     % Compute lines for Fourier components
-    Lines = getFourierLines(t, N, FourierCoeffs, NumPathPoints);
+    Lines = getFourierLines(t, FourierCoeffs);
 
     if strcmp(AnimationType, 'Lines')
         % Update line plots
@@ -97,10 +97,13 @@ for t = time_values
             CurrentCenter = Lines(k + 1);
         end
     end
+    
+    % Scatter Point
+    FourierScatter = getFourierPoint(t, FourierCoeffs);
 
     % Update Fourier Point Scatter
-    FourierPointScatter.XData = real(Lines(end));
-    FourierPointScatter.YData = imag(Lines(end));
+    FourierPointScatter.XData = real(FourierScatter);
+    FourierPointScatter.YData = imag(FourierScatter);
 
     % Control animation speed
     pause(1 / fps);
